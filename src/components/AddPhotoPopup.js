@@ -42,8 +42,8 @@ function AddPhotoPopup({ isOpen, onClose, onAddPlace, isLoading }) {
         <input
           className="form__input form__input_photo-title"
           type="text"
-          name="name"
-          id="name"
+          name="title"
+          id="title"
           placeholder="Название"
           minLength="2"
           maxLength="30"

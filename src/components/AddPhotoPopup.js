@@ -21,10 +21,8 @@ function AddPhotoPopup({ isOpen, onClose, onAddPlace, isLoading }) {
   function handleSubmit(e) {
     e.preventDefault();
 
-    onAddPlace({ name, link }, () => {
-      setName('');
-      setLink('');
-    });
+    onAddPlace({ name, link });
+    onClose();
   }
 
   return (

@@ -58,7 +58,7 @@ const App = () => {
           handleLogOut();
         });
     }
-  }, [navigate]);
+  }, []);
 
   useEffect(() => {
     api
@@ -78,29 +78,44 @@ const App = () => {
       .catch((err) => {
         console.log(err);
       });
-
-    function handleESC(evt) {
-      if (evt.key === 'Escape') {
-        closeAllPopups();
-      }
-    }
-
-    function handleOverlayClose(evt) {
-      evt.target.classList.contains('popup_opened') && closeAllPopups();
-    }
-
-    document.addEventListener('keydown', handleESC);
-    document.addEventListener('mousedown', handleOverlayClose);
-
-    return () => {
-      document.removeEventListener('keydown', handleOverlayClose);
-      document.removeEventListener('mousedown', handleESC);
-    };
   }, []);
 
   useEffect(() => {
     checkIsToken();
-  }, [checkIsToken]);
+  }, []);
+
+  function handleESC(evt) {
+    if (evt.key === 'Escape') {
+      closeAllPopups();
+    }
+  }
+
+  function handleOverlayClose(evt) {
+    evt.target.classList.contains('popup_opened') && closeAllPopups();
+  }
+
+  useEffect(() => {
+    document.addEventListener('keydown', handleESC);
+    document.addEventListener('mousedown', handleOverlayClose);
+  }, [
+    handleEditAvatarClick,
+    handleEditProfileClick,
+    handleAddPlaceClick,
+    handleCardClick,
+    handleDeleteClick,
+    handleUpdateUser,
+    handleUpdateAvatar,
+    handleCardLike,
+    handleAddPlaceSubmit,
+    handleCardDelete,
+    handleRegisterSuccess,
+    handleRegisterError,
+  ]);
+
+  useEffect(() => {
+    document.removeEventListener('keydown', handleOverlayClose);
+    document.removeEventListener('mousedown', handleESC);
+  }, [closeAllPopups]);
 
   function handleLogin() {
     setLoggedIn(true);
@@ -109,30 +124,38 @@ const App = () => {
   function handleLogOut() {
     setLoggedIn(false);
   }
+  function handleRegisterSuccess() {
+    setIsRegisterSuccessPopupOpen(true);
+  }
+
+  function handleRegisterError() {
+    setIsRegisterErrorPopupClose(true);
+  }
 
   function handleSignUp(userData) {
     const { password, email } = userData;
     register(password, email)
       .then(() => {
-        setIsRegisterSuccessPopupOpen();
+        handleRegisterSuccess();
         navigate('/sign-in', { replace: true });
       })
       .catch((err) => {
         console.log(err);
-        setIsRegisterErrorPopupClose();
+        handleRegisterError();
       });
   }
 
   function handleSignIn(userData) {
     const { password, email } = userData;
     authorize(password, email)
-      .then((jwt) => {
+      .then((data) => {
+        localStorage.setItem('jwt', data.token);
         handleLogin();
         navigate('/', { replace: true });
       })
+
       .catch((err) => {
         console.log(err);
-        setIsRegisterErrorPopupClose();
         handleLogOut();
       });
   }

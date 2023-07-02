@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import FormSign from './FormSign.js';
 
 import Header from './Header.js';
 const Register = ({ onSignUp }) => {
@@ -34,36 +35,11 @@ const Register = ({ onSignUp }) => {
       </Header>
       <div className="auth-form">
         <h1 className="auth-form__title">Регистрация</h1>
-        <form onSubmit={handleSubmit} className="auth-form__form">
-          <input
-            className="auth-form__form-input"
-            id="email"
-            name="email"
-            type="email"
-            placeholder="Email"
-            minLength="5"
-            maxLength="64"
-            value={formValue.email}
-            onChange={handleChange}
-            required
-          />
-          <input
-            className="auth-form__form-input"
-            id="password"
-            name="password"
-            type="password"
-            placeholder="Пароль"
-            minLength="3"
-            maxLength="20"
-            value={formValue.password}
-            onChange={handleChange}
-            required
-          />
-
-          <button type="submit" className="button-submit-auth">
-            Зарегистрироваться
-          </button>
-        </form>
+        <FormSign
+          handleChange={handleChange}
+          formValue={formValue}
+          handleSubmit={handleSubmit}
+        />
         <p className="auth-form__signin">
           Уже зарегистрированы?<span> </span>
           <Link to="sign-in" className="auth-form__login-link" replace>

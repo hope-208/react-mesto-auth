@@ -84,38 +84,31 @@ const App = () => {
     checkIsToken();
   }, []);
 
-  function handleESC(evt) {
-    if (evt.key === 'Escape') {
-      closeAllPopups();
+  useEffect(() => {
+    function handleEsc(evt) {
+      if (evt.key === 'Escape') {
+        closeAllPopups();
+      }
     }
-  }
 
-  function handleOverlayClose(evt) {
-    evt.target.classList.contains('popup_opened') && closeAllPopups();
-  }
+    function handleClickOverlay(evt) {
+      evt.target.classList.contains('popup_opened') && closeAllPopups();
+    }
 
-  useEffect(() => {
-    document.addEventListener('keydown', handleESC);
-    document.addEventListener('mousedown', handleOverlayClose);
+    document.addEventListener('keydown', handleEsc);
+    document.addEventListener('mousedown', handleClickOverlay);
+    return () => {
+      document.removeEventListener('keydown', handleClickOverlay);
+      document.removeEventListener('mousedown', handleEsc);
+    };
   }, [
-    handleEditAvatarClick,
-    handleEditProfileClick,
-    handleAddPlaceClick,
-    handleCardClick,
-    handleDeleteClick,
-    handleUpdateUser,
-    handleUpdateAvatar,
-    handleCardLike,
-    handleAddPlaceSubmit,
-    handleCardDelete,
-    handleRegisterSuccess,
-    handleRegisterError,
+    isRegisterSuccessPopupOpen,
+    isRegisterErrorPopupClose,
+    isEditAvatarPopupOpen,
+    isEditProfilePopupOpen,
+    isDeletePopupOpen,
+    isAddPlacePopupOpen,
   ]);
-
-  useEffect(() => {
-    document.removeEventListener('keydown', handleOverlayClose);
-    document.removeEventListener('mousedown', handleESC);
-  }, [closeAllPopups]);
 
   function handleLogin() {
     setLoggedIn(true);
@@ -150,6 +143,7 @@ const App = () => {
     authorize(password, email)
       .then((data) => {
         localStorage.setItem('jwt', data.token);
+        setUserData(userData);
         handleLogin();
         navigate('/', { replace: true });
       })
@@ -234,13 +228,12 @@ const App = () => {
       });
   }
 
-  function handleAddPlaceSubmit({ name, link }, onSuccess) {
+  function handleAddPlaceSubmit({ name, link }) {
     setIsLoading(true);
     api
       .addPhoto({ name, link })
       .then((newCard) => {
         setCards([newCard, ...cards]);
-        onSuccess();
         closeAllPopups();
       })
       .catch((err) => {
@@ -348,8 +341,6 @@ const App = () => {
             onSubmit={handleCardDelete}
           ></PopupWithForm>
         </CurrentUserContext.Provider>
-
-        <ImagePopup onClose={closeAllPopups} card={selectedCard} />
 
         <InfoTooltip
           title="Вы успешно зарегистрировались!"

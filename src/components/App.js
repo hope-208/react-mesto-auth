@@ -23,10 +23,7 @@ const App = () => {
     useState(false);
   const [isRegisterErrorPopupClose, setIsRegisterErrorPopupClose] =
     useState(false);
-  const [userData, setUserData] = useState({
-    _id: '',
-    email: '',
-  });
+  const [emailUser, setEmailUser] = useState(null);
   const [currentUser, setCurrentUser] = useState({});
   const [cards, setCards] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -49,7 +46,7 @@ const App = () => {
           };
           if (res) {
             handleLogin();
-            setUserData(userData);
+            setEmailUser(userData.email);
             navigate('/', { replace: true });
           }
         })
@@ -143,7 +140,7 @@ const App = () => {
     authorize(password, email)
       .then((data) => {
         localStorage.setItem('jwt', data.token);
-        setUserData(userData);
+        setEmailUser(userData.email);
         handleLogin();
         navigate('/', { replace: true });
       })
@@ -296,7 +293,7 @@ const App = () => {
               <ProtectedRoute
                 isLoggedIn={isLoggedIn}
                 element={Main}
-                userData={userData}
+                userEmail={emailUser}
                 onSignOut={handleSignOut}
                 cards={cards}
                 onEditAvatar={handleEditAvatarClick}

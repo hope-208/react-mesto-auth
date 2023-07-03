@@ -6,7 +6,7 @@ import Card from './Card.js';
 import Footer from './Footer.js';
 
 function Main({
-  userData,
+  userEmail,
   onSignOut,
   cards,
   onEditAvatar,
@@ -22,7 +22,7 @@ function Main({
     <>
       <Header>
         <div className="header__nav">
-          <p className="header__login">{userData.email}</p>
+          <p className="header__login">{userEmail}</p>
           <Link to="/sign-in" onClick={onSignOut} className="header__link">
             Выйти
           </Link>
